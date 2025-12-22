@@ -65,3 +65,52 @@ def test_rbac_and_project_crud(client):
     up = client.patch(f"/projects/{pid}", headers=auth_header(editor_access), json={"title":"Updated"})
     assert up.status_code == 200
     assert up.json()["title"] == "Updated"
+    
+    
+    
+def test_viewer_cannot_create_project(client):
+    # login as viewer
+    r = client.post(
+        "/auth/login",
+        data={
+            "username": "viewer@rbac.com",
+            "password": "strongpass123",
+        },
+    )
+    assert r.status_code == 200
+    viewer_token = r.json()["access_token"]
+
+    # viewer tries to create a project
+    r = client.post(
+        "/projects",
+        headers={"Authorization": f"Bearer {viewer_token}"},
+        json={
+            "title": "Viewer Forbidden Project",
+            "description": "This should not be allowed",
+            "github_url": "https://github.com/example/repo",
+            "is_public": True,
+            "tag_names": [],
+        },
+    )
+
+    assert r.status_code == 403
+    
+    
+def test_list_projects_requires_auth(client):
+    r = client.get("/projects")
+    assert r.status_code == 401
+
+
+def test_list_projects_as_editor(client):
+    # login as editor created in test_rbac_and_project_crud
+    r = client.post(
+        "/auth/login",
+        data={"username": "editor@rbac.com", "password": "strongpass123"},
+    )
+    assert r.status_code == 200
+    token = r.json()["access_token"]
+
+    r = client.get("/projects", headers={"Authorization": f"Bearer {token}"})
+    assert r.status_code == 200
+    assert isinstance(r.json(), list)
+
