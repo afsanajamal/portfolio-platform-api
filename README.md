@@ -1,62 +1,62 @@
-# Project & Portfolio Platform API (FastAPI + PostgreSQL)
+# Project & Portfolio Platform API
 
-A backend-first, multi-tenant API meant to make a **good impression on backend engineers**:
-- Organizations (multi-tenant)
-- JWT auth (access + refresh)
-- RBAC: admin / editor / viewer
-- Projects (public/private) + tags (many-to-many)
-- Activity/Audit log on mutations
-- Alembic migrations
-- Pytest API tests
-- Docker Compose for PostgreSQL
+A production-style backend API for managing projects and portfolios in a multi-tenant environment.  
+Built with FastAPI and PostgreSQL, featuring JWT authentication, role-based access control (RBAC), audit logs, and automated tests.
 
-## Run locally
+This project is designed as a **portfolio-quality backend system**, suitable for academic evaluation and backend team review.
 
-### 1) Start Postgres
-```bash
-docker compose up -d
-```
+---
 
-### 2) Setup python env
-```bash
-python -m venv .venv
-# mac/linux:
-source .venv/bin/activate
-# windows (powershell):
-# .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
+## Tech Stack
 
-### 3) Configure env
-```bash
-cp .env.example .env
-# set JWT_SECRET to something long/random
-```
+- **Backend Framework**: FastAPI
+- **Language**: Python 3.13
+- **Database**: PostgreSQL (Dockerized for local development)
+- **ORM**: SQLAlchemy 2.0
+- **Migrations**: Alembic
+- **Authentication**: JWT (Access + Refresh tokens)
+- **Password Hashing**: Argon2
+- **Authorization**: Role-Based Access Control (RBAC)
+- **Testing**: Pytest + FastAPI TestClient
+- **API Documentation**: OpenAPI / Swagger
 
-### 4) Migrate DB
-```bash
-alembic upgrade head
-```
+---
 
-### 5) Seed demo admin (optional)
-```bash
-python scripts/seed_admin.py
-```
+## Core Features
 
-### 6) Run API
-```bash
-uvicorn app.main:app --reload
-```
+### Authentication & Security
+- User registration and login
+- OAuth2 password flow
+- JWT-based authentication (access & refresh tokens)
+- Secure password hashing using Argon2
 
-Swagger: http://127.0.0.1:8000/docs
+### Authorization (RBAC)
+- **Admin**
+  - Manage users
+  - Create, update, and view projects
+  - Access audit logs
+- **Editor**
+  - Create and update projects
+- **Viewer**
+  - Read-only access to public projects
 
-## Testing (uses SQLite test DB)
-```bash
-pytest -q
-```
+### Project Management
+- Create and manage projects within an organization
+- Tag-based project categorization
+- Public / private project visibility
+- Multi-tenant organization support
 
-## Roles
-- admin: manage users + view activity + full CRUD
-- editor: create/update projects + create tags
-- viewer: read-only
+### Audit Logging
+- Automatic activity logs for sensitive actions (e.g. project creation)
+- Admin-only access to audit logs
+
+### Testing
+- Isolated test database (SQLite)
+- Integration-style API tests
+- Auth, RBAC, and project CRUD tested
+- Dependency overrides for clean test isolation
+
+---
+
+## Project Structure
 
