@@ -60,3 +60,14 @@ This project is designed as a **portfolio-quality backend system**, suitable for
 
 ## Project Structure
 
+## Documentation
+
+Detailed project documentation is available below:
+
+- [Project Overview](docs/overview.md)
+- [Architecture & Design Decisions](docs/architecture.md)
+- [Authentication & RBAC](docs/auth-and-rbac.md)
+- [Database Schema](docs/database-schema.md)
+- [Testing & CI](docs/testing-and-ci.md)
+
+
