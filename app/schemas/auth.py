@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
+from typing import Optional
 
 class RegisterRequest(BaseModel):
     org_name: str = Field(min_length=2, max_length=200)
@@ -13,6 +14,9 @@ class TokenPair(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
+    role: str
+    org_id: Optional[int] = None
+    user_id: int
 
 class RefreshRequest(BaseModel):
     refresh_token: str

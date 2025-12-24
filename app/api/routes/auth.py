@@ -40,7 +40,7 @@ def register(body: RegisterRequest, db: Session = Depends(get_db)):
         secret=settings.JWT_SECRET,
         algorithm=settings.JWT_ALGORITHM,
         expires_minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
-        extra={"org_id": user.org_id, "role": user.role},
+        extra={"org_id": user.org_id, "role": user.role, "user_id": user.id},
     )
     refresh = create_refresh_token(
         subject=user.email,
@@ -48,7 +48,14 @@ def register(body: RegisterRequest, db: Session = Depends(get_db)):
         algorithm=settings.JWT_ALGORITHM,
         expires_days=settings.REFRESH_TOKEN_EXPIRE_DAYS,
     )
-    return {"access_token": access, "refresh_token": refresh}
+    return {
+        "access_token": access, 
+        "refresh_token": refresh, 
+        "token_type": "bearer",
+        "role": user.role,
+        "org_id": user.org_id,
+        "user_id": user.id,
+    }
 
 @router.post("/login", response_model=TokenPair)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
@@ -66,7 +73,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
         secret=settings.JWT_SECRET,
         algorithm=settings.JWT_ALGORITHM,
         expires_minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
-        extra={"org_id": user.org_id, "role": user.role},
+        extra={"org_id": user.org_id, "role": user.role, "user_id": user.id},
     )
     refresh = create_refresh_token(
         subject=user.email,
@@ -74,7 +81,14 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
         algorithm=settings.JWT_ALGORITHM,
         expires_days=settings.REFRESH_TOKEN_EXPIRE_DAYS,
     )
-    return {"access_token": access, "refresh_token": refresh}
+    return {
+        "access_token": access, 
+        "refresh_token": refresh,
+        "token_type": "bearer",
+        "role": user.role,
+        "org_id": user.org_id,
+        "user_id": user.id,
+    }
 
 @router.post("/refresh", response_model=TokenPair)
 def refresh(body: RefreshRequest, db: Session = Depends(get_db)):
@@ -97,7 +111,7 @@ def refresh(body: RefreshRequest, db: Session = Depends(get_db)):
         secret=settings.JWT_SECRET,
         algorithm=settings.JWT_ALGORITHM,
         expires_minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
-        extra={"org_id": user.org_id, "role": user.role},
+        extra={"org_id": user.org_id, "role": user.role, "user_id": user.id},
     )
     refresh = create_refresh_token(
         subject=user.email,
@@ -105,4 +119,11 @@ def refresh(body: RefreshRequest, db: Session = Depends(get_db)):
         algorithm=settings.JWT_ALGORITHM,
         expires_days=settings.REFRESH_TOKEN_EXPIRE_DAYS,
     )
-    return {"access_token": access, "refresh_token": refresh}
+    return {
+        "access_token": access, 
+        "refresh_token": refresh,
+        "token_type": "bearer",
+        "role": user.role,
+        "org_id": user.org_id,
+        "user_id": user.id,
+    }
