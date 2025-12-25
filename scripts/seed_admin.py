@@ -10,30 +10,56 @@ def main():
     db: Session = SessionLocal()
     try:
         org_name = "Demo Org"
-        email = "admin@example.com"
-        password = "admin12345"
 
+        # Create organization
         org = db.query(Organization).filter(Organization.name == org_name).first()
         if not org:
             org = Organization(name=org_name)
             db.add(org)
             db.flush()
 
-        user = db.query(User).filter(User.email == email).first()
-        if not user:
-            user = User(
-                org_id=org.id,
-                email=email,
-                hashed_password=hash_password(password),
-                role=OrgRole.admin.value,
-            )
-            db.add(user)
+        # Define test users with different roles
+        users = [
+            {
+                "email": "admin@example.com",
+                "password": "admin12345",
+                "role": OrgRole.admin.value,
+            },
+            {
+                "email": "editor@example.com",
+                "password": "editor12345",
+                "role": OrgRole.editor.value,
+            },
+            {
+                "email": "viewer@example.com",
+                "password": "viewer12345",
+                "role": OrgRole.viewer.value,
+            },
+        ]
+
+        # Create or update each user
+        for user_data in users:
+            user = db.query(User).filter(User.email == user_data["email"]).first()
+            if not user:
+                user = User(
+                    org_id=org.id,
+                    email=user_data["email"],
+                    hashed_password=hash_password(user_data["password"]),
+                    role=user_data["role"],
+                )
+                db.add(user)
+            else:
+                # Update existing user to ensure correct org, password, and role
+                user.org_id = org.id
+                user.hashed_password = hash_password(user_data["password"])
+                user.role = user_data["role"]
 
         db.commit()
         print("Seed complete.")
         print(f"Org: {org_name}")
-        print(f"Admin: {email}")
-        print(f"Password: {password}")
+        print("\nTest users (created/updated):")
+        for user_data in users:
+            print(f"  - {user_data['role']}: {user_data['email']} / {user_data['password']}")
     finally:
         db.close()
 
