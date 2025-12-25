@@ -69,5 +69,6 @@ Detailed project documentation is available below:
 - [Authentication & RBAC](docs/auth-and-rbac.md)
 - [Database Schema](docs/database-schema.md)
 - [Testing & CI](docs/testing-and-ci.md)
+- [Development Guide](docs/development.md)
 
 
