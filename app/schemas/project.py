@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from app.schemas.tag import TagOut
 
 class ProjectCreate(BaseModel):
@@ -16,6 +16,8 @@ class ProjectUpdate(BaseModel):
     tag_names: list[str] | None = None
 
 class ProjectOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     org_id: int
     owner_id: int
@@ -24,6 +26,3 @@ class ProjectOut(BaseModel):
     github_url: str | None
     is_public: bool
     tags: list[TagOut]
-
-    class Config:
-        from_attributes = True
