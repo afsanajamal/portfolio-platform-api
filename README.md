@@ -122,8 +122,8 @@ Detailed project documentation is available below:
    Update `.env` with your configuration (defaults work for local development):
    ```env
    DATABASE_URL=postgresql+psycopg://portfolio:portfolio@localhost:5432/portfolio_db
-   SECRET_KEY=your-secret-key-change-this-in-production
-   ALGORITHM=HS256
+   JWT_SECRET=your-secret-key-change-this-in-production
+   JWT_ALGORITHM=HS256
    ACCESS_TOKEN_EXPIRE_MINUTES=30
    REFRESH_TOKEN_EXPIRE_DAYS=7
    ```
@@ -327,5 +327,7 @@ FastAPI provides automatic interactive documentation:
 
 ## License
 
-This project is for portfolio and educational purposes.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+This project was created for portfolio and educational purposes.
 

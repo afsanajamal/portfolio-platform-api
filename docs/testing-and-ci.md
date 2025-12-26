@@ -248,7 +248,7 @@ def test_duplicate_email_registration(client):
 
 ## Continuous Integration (GitHub Actions)
 
-### Workflow: `.github/workflows/backend-tests.yml`
+### Workflow: `.github/workflows/ci.yml`
 
 On every push and pull request to `main`:
 
@@ -270,12 +270,9 @@ On every push and pull request to `main`:
 
 #### Step 3: Run Tests
 ```yaml
-- name: Run tests
+- name: Run tests with coverage
   run: |
-    pytest --cov=app --cov-report=term
-  env:
-    DATABASE_URL: sqlite:///:memory:
-    SECRET_KEY: test-secret-key-for-ci
+    pytest -v --cov=app --cov-report=term
 ```
 
 #### Step 4: Build Status
@@ -288,9 +285,10 @@ Environment variables for CI:
 ```yaml
 env:
   DATABASE_URL: sqlite:///:memory:
-  SECRET_KEY: test-secret-key-for-ci
-  ACCESS_TOKEN_EXPIRE_MINUTES: 30
-  REFRESH_TOKEN_EXPIRE_DAYS: 7
+  JWT_SECRET: test-secret
+  JWT_ALGORITHM: HS256
+  ACCESS_TOKEN_EXPIRE_MINUTES: "30"
+  REFRESH_TOKEN_EXPIRE_DAYS: "7"
 ```
 
 Benefits:
