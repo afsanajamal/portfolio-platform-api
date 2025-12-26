@@ -114,3 +114,32 @@ def test_list_projects_as_editor(client):
     assert r.status_code == 200
     assert isinstance(r.json(), list)
 
+
+def test_delete_project(client):
+    # Login as editor
+    r = client.post("/auth/login", data={
+        "username": "editor@rbac.com",
+        "password": "strongpass123",
+    })
+    assert r.status_code == 200
+    editor_token = r.json()["access_token"]
+
+    # Create a project to delete
+    r = client.post("/projects", headers=auth_header(editor_token), json={
+        "title": "Project to Delete",
+        "description": "This project will be deleted",
+    })
+    assert r.status_code == 200
+    project_id = r.json()["id"]
+
+    # Delete the project
+    r = client.delete(f"/projects/{project_id}", headers=auth_header(editor_token))
+    assert r.status_code == 200
+    assert r.json()["ok"] is True
+
+    # Verify project is deleted (404 when trying to access it)
+    r = client.patch(f"/projects/{project_id}", headers=auth_header(editor_token), json={
+        "title": "Should not work",
+    })
+    assert r.status_code == 404
+
